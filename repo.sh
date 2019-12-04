@@ -24,7 +24,7 @@ repos=(
     "https://github.com/edx/ecommerce.git"
     "https://github.com/edx/edx-e2e-tests.git"
     "https://github.com/edx/edx-notes-api.git"
-    "https://github.com/edx/edx-platform.git"
+#    "https://github.com/edx/edx-platform.git"
     "https://github.com/edx/xqueue.git"
     "https://github.com/edx/edx-analytics-pipeline.git"
 )
@@ -90,7 +90,9 @@ _clone ()
                 git clone $repo
             fi
             if [ -n "${OPENEDX_RELEASE}" ]; then
+              cd $name
                 git checkout open-release/${OPENEDX_RELEASE}
+              cd ..
             fi
         fi
     done
