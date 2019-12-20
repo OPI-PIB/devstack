@@ -217,6 +217,17 @@ services:
     volumes:
       - devpi_data:/data
 
+  navoica-studio-forum:
+    command: python manage.py runserver 0.0.0.0:8000
+    container_name: navoica.devstack.studio-forum
+    image: navoica/studio-forum:${NAVOICA_SHORT_RELEASE}
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../navoica-studio-forum:/edx/app/studio-forum
+
 volumes:
   discovery_assets:
   edxapp_lms_assets:

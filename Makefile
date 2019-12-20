@@ -153,6 +153,9 @@ discovery-shell: ## Run a shell on the discovery container
 ecommerce-shell: ## Run a shell on the ecommerce container
 	docker exec -it edx.devstack.ecommerce env TERM=$(TERM) /edx/app/ecommerce/devstack.sh open
 
+studio-forum-shell: ## Run a shell on the studio forum container
+	docker exec -it navoica.devstack.studio-forum bash
+
 e2e-shell: ## Start the end-to-end tests container with a shell
 	docker run -it --network=devstack_default -v ${DEVSTACK_WORKSPACE}/edx-e2e-tests:/edx-e2e-tests -v ${DEVSTACK_WORKSPACE}/navoica-platform:/edx-e2e-tests/lib/navoica-platform --env-file ${DEVSTACK_WORKSPACE}/edx-e2e-tests/devstack_env edxops/e2e env TERM=$(TERM) bash
 

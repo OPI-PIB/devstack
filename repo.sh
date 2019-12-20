@@ -35,6 +35,7 @@ private_repos=(
 
 navoica_repos=(
      "https://github.com/OPI-PIB/navoica-platform.git"
+     "https://github.com/OPI-PIB/navoica-studio-forum.git"
     )
 
 name_pattern=".*/(.*).git"
@@ -86,7 +87,7 @@ _navoica_checkout ()
         if [ -d "$name" -a -n "$(ls -A "$name" 2>/dev/null)" ]; then
             cd $name
             echo "Checking out branch $branch of $name"
-            git pull
+#            git pull
             git checkout "$branch"
             cd ..
         fi
@@ -174,7 +175,7 @@ clone_private ()
 reset ()
 {
     currDir=$(pwd)
-    for repo in "("${repos[*]}" "${navoica_repos[*]}")"
+    for repo in "("${repos[*]}" " ${navoica_repos[*]}")"
     do
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
@@ -191,7 +192,7 @@ reset ()
 status ()
 {
     currDir=$(pwd)
-    for repo in "("${repos[*]}" "${navoica_repos[*]}")"
+    for repo in "("${repos[*]}" " ${navoica_repos[*]}")"
     do
         echo "${repo}"
         [[ $repo =~ $name_pattern ]]
