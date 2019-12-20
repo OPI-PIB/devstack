@@ -75,7 +75,7 @@ use the following options:
 
 - PyCharm helpers path: Keep the default.
 
-**Note**: For lms and studio (edx-platform), it will take a long time to
+**Note**: For lms and studio (navoica-platform), it will take a long time to
 update skeletons (10 or more minutes). If you want to try a different
 set of configuration (compose) files, we recommend you create a new one
 so you can easily switch back to old without this delay.
@@ -164,12 +164,12 @@ Configuration`_, with the following specific values.
 5. Python Interpreter: Choose the Docker Compose interpreter for this
    service.
 
-6. Working directory: /edx/app/edxapp/edx-platform
+6. Working directory: /edx/app/edxapp/navoica-platform
 
 7. Path mappings (add mapping):
 
-   - Local path: /LOCAL/PATH/TO/edx-platform (e.g. ~/edx/edx-platform)
-   - Remote path: /edx/app/edxapp/edx-platform
+   - Local path: /LOCAL/PATH/TO/navoica-platform (e.g. ~/edx/navoica-platform)
+   - Remote path: /edx/app/edxapp/navoica-platform
 
 8. Deselect "Add content..." and "Add source..."
 
@@ -214,12 +214,12 @@ configuration with the following options:
 1. Python Interpreter: Choose the Docker Compose interpreter for this
    service.
 
-2. Working directory: /edx/app/edxapp/edx-platform
+2. Working directory: /edx/app/edxapp/navoica-platform
 
 3. Path mappings (add mapping):
 
-   - Local path: LOCAL/PATH/TO/edx-platform (e.g. ~/edx/edx-platform)
-   - Remote path: /edx/app/edxapp/edx-platform
+   - Local path: LOCAL/PATH/TO/navoica-platform (e.g. ~/edx/navoica-platform)
+   - Remote path: /edx/app/edxapp/navoica-platform
 
 4. Deselect "Add content..." and "Add source..."
 

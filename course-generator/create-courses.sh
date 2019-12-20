@@ -49,7 +49,7 @@ done < "${@: -1}"
 
 if $studio ; then
 	echo "Creating courses on studio."
-	docker-compose exec lms bash -c "source /edx/app/edxapp/edxapp_env && python /edx/app/edxapp/edx-platform/manage.py cms --settings=devstack_docker generate_courses '$course_json'"
+	docker-compose exec lms bash -c "source /edx/app/edxapp/edxapp_env && python /edx/app/edxapp/navoica-platform/manage.py cms --settings=devstack_docker generate_courses '$course_json'"
 fi
 
 if $ecommerce ; then

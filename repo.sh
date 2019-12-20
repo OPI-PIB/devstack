@@ -26,13 +26,16 @@ repos=(
     "https://github.com/edx/edx-notes-api.git"
     "https://github.com/edx/xqueue.git"
     "https://github.com/edx/edx-analytics-pipeline.git"
-    "https://github.com/edx/edx-platform.git"
 )
 
 private_repos=(
     # Needed to run whitelabel tests.
     "https://github.com/edx/edx-themes.git"
 )
+
+navoica_repos=(
+     "https://github.com/OPI-PIB/navoica-platform.git"
+    )
 
 name_pattern=".*/(.*).git"
 
@@ -63,9 +66,37 @@ _checkout ()
     done
 }
 
+_navoica_checkout ()
+{
+
+    repos_to_checkout=("$@")
+
+    if [ -z "$NAVOICA_RELEASE" ]; then
+        branch="master"
+    else
+        branch="${NAVOICA_RELEASE}"
+    fi
+    for repo in "${repos_to_checkout[@]}"   
+    do
+        # Use Bash's regex match operator to capture the name of the repo.
+        # Results of the match are saved to an array called $BASH_REMATCH.
+        [[ $repo =~ $name_pattern ]]
+        name="${BASH_REMATCH[1]}"
+        # If a directory exists and it is nonempty, assume the repo has been cloned.
+        if [ -d "$name" -a -n "$(ls -A "$name" 2>/dev/null)" ]; then
+            cd $name
+            echo "Checking out branch $branch of $name"
+            git pull
+            git checkout "$branch"
+            cd ..
+        fi
+    done
+}
+
 checkout ()
 {
     _checkout "${repos[@]}"
+    _navoica_checkout "${navoica_repos[@]}"
 }
 
 _clone ()
@@ -79,7 +110,6 @@ _clone ()
         # Results of the match are saved to an array called $BASH_REMATCH.
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
-
         # If a directory exists and it is nonempty, assume the repo has been checked out.
         if [ -d "$name" -a -n "$(ls -A "$name" 2>/dev/null)" ]; then
             printf "The [%s] repo is already checked out. Continuing.\n" $name
@@ -96,12 +126,44 @@ _clone ()
             fi
         fi
     done
+    # cd - &> /dev/null
+}
+
+_navoica_clone ()
+{
+    # for repo in ${repos[*]}
+    repos_to_clone=("$@")
+
+    for repo in "${repos_to_clone[@]}"
+    do
+        # Use Bash's regex match operator to capture the name of the repo.
+        # Results of the match are saved to an array called $BASH_REMATCH.
+        [[ $repo =~ $name_pattern ]]
+        name="${BASH_REMATCH[1]}"
+        # If a directory exists and it is nonempty, assume the repo has been checked out.
+        if [ -d "$name" -a -n "$(ls -A "$name" 2>/dev/null)" ]; then
+            printf "The [%s] repo is already checked out. Continuing.\n" $name
+        else
+            if [ "${SHALLOW_CLONE}" == "1" ]; then
+                git clone --depth=1 $repo
+            else
+                git clone $repo
+            fi
+            if [ -n "${NAVOICA_RELEASE}" ]; then
+              cd $name
+                git checkout ${NAVOICA_RELEASE}
+              cd ..
+            fi
+        fi
+    done
     cd - &> /dev/null
 }
+
 
 clone ()
 {
     _clone "${repos[@]}"
+    _navoica_clone "${navoica_repos[@]}"
 }
 
 clone_private ()
@@ -112,7 +174,7 @@ clone_private ()
 reset ()
 {
     currDir=$(pwd)
-    for repo in ${repos[*]}
+    for repo in "("${repos[*]}" "${navoica_repos[*]}")"
     do
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
@@ -129,8 +191,9 @@ reset ()
 status ()
 {
     currDir=$(pwd)
-    for repo in ${repos[*]}
+    for repo in "("${repos[*]}" "${navoica_repos[*]}")"
     do
+        echo "${repo}"
         [[ $repo =~ $name_pattern ]]
         name="${BASH_REMATCH[1]}"
 
@@ -141,6 +204,7 @@ status ()
             printf "The [%s] repo is not cloned. Continuing.\n" $name
         fi
     done
+
     cd - &> /dev/null
 }
 

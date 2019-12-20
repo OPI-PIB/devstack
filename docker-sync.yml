@@ -22,7 +22,7 @@ syncs:
 
   edxapp-sync:
     host_disk_mount_mode: 'cached'
-    src: '../edx-platform/'
+    src: '../navoica-platform/'
     sync_excludes: [ '.idea' ]
 
   forum-sync:

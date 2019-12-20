@@ -381,7 +381,7 @@ The build commands above will use your local configuration, but will pull
 application code from the master branch of the application's repository. If you
 would like to use code from another branch/tag/hash, modify the ``*_VERSION``
 variable that lives in the ``ansible_overrides.yml`` file beside the
-``Dockerfile``. Note that edx-platform is an exception; the variable to modify is ``edx_platform_version``
+``Dockerfile``. Note that navoica-platform is an exception; the variable to modify is ``edx_platform_version``
 and not ``EDXAPP_VERSION``.
 
 For example, if you wanted to build tag ``release-2017-03-03`` for the
@@ -454,11 +454,11 @@ Log into the LMS shell, source the ``edxapp`` virtualenv, and run the
 
    make lms-shell
    source /edx/app/edxapp/edxapp_env
-   cd /edx/app/edxapp/edx-platform
+   cd /edx/app/edxapp/navoica-platform
    ./manage.py <lms/cms> makemigrations <appname> --settings=devstack_docker
 
 Also, make sure you are aware of the `Django Migration Don'ts`_ as the
-edx-platform is deployed using the red-black method.
+navoica-platform is deployed using the red-black method.
 
 
 How do I upgrade Node.JS packages?
@@ -637,7 +637,7 @@ Running LMS and Studio Tests
 
 After entering a shell for the appropriate service via ``make lms-shell`` or
 ``make studio-shell``, you can run any of the usual paver commands from the
-`edx-platform testing documentation`_.  Examples:
+`navoica-platform testing documentation`_.  Examples:
 
 .. code:: sh
 
@@ -679,7 +679,7 @@ use Firefox instead, prefix the test command with
 Running End-to-End Tests
 ------------------------
 
-To run the base set of end-to-end tests for edx-platform, run the following
+To run the base set of end-to-end tests for navoica-platform, run the following
 make target:
 
 .. code:: sh
@@ -730,7 +730,7 @@ the following command from the devstack directory:
    git pull
 
 Lastly, the images are built from the master branches of the application
-repositories (e.g. edx-platform, ecommerce, etc.). Make sure you are using the
+repositories (e.g. navoica-platform, ecommerce, etc.). Make sure you are using the
 latest code from the master branches, or have rebased your branches on master.
 
 Clean the containers
@@ -835,7 +835,7 @@ Here is an example error while running ``make pull``:
 
    ...
    32d52c166025: Extracting [==================================================>] 1.598 GB/1.598 GB
-   ERROR: failed to register layer: Error processing tar file(exit status 1): write /edx/app/edxapp/edx-platform/.git/objects/pack/pack-4ff9873be2ca8ab77d4b0b302249676a37b3cd4b.pack: no space left on device
+   ERROR: failed to register layer: Error processing tar file(exit status 1): write /edx/app/edxapp/navoica-platform/.git/objects/pack/pack-4ff9873be2ca8ab77d4b0b302249676a37b3cd4b.pack: no space left on device
    make: *** [pull] Error 1
 
 Try this first to clean up dangling images:
@@ -928,7 +928,7 @@ Improve Mac OSX Performance with docker-sync
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Docker for Mac has known filesystem issues that significantly decrease
-performance for certain use cases, for example running tests in edx-platform. To
+performance for certain use cases, for example running tests in navoica-platform. To
 improve performance, `Docker Sync`_  can be used to synchronize file data from
 the host machine to the containers.
 
@@ -989,7 +989,7 @@ GitHub issue which explains the `current status of implementing delegated consis
 .. _Docker Hub: https://hub.docker.com/
 .. _Pycharm Integration documentation: docs/pycharm_integration.rst
 .. _devpi documentation: docs/devpi.rst
-.. _edx-platform testing documentation: https://github.com/edx/edx-platform/blob/master/docs/testing.rst#running-python-unit-tests
+.. navoica-platform testing documentation: https://github.com/OPI-PIB/navoica-platform/blob/master/docs/testing.rst#running-python-unit-tests
 .. _docker-sync: #improve-mac-osx-performance-with-docker-sync
 .. |Build Status| image:: https://travis-ci.org/edx/devstack.svg?branch=master
     :target: https://travis-ci.org/edx/devstack

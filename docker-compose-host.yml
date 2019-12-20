@@ -18,8 +18,8 @@ services:
       - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   lms:
     volumes:
-      - ${DEVSTACK_WORKSPACE}/edx-platform:/edx/app/edxapp/edx-platform:cached
-      - edxapp_node_modules:/edx/app/edxapp/edx-platform/node_modules
+      - ${DEVSTACK_WORKSPACE}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
+      - edxapp_node_modules:/edx/app/edxapp/navoica-platform/node_modules
       - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   edx_notes_api:
     volumes:
@@ -27,8 +27,8 @@ services:
       - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   studio:
     volumes:
-      - ${DEVSTACK_WORKSPACE}/edx-platform:/edx/app/edxapp/edx-platform:cached
-      - edxapp_node_modules:/edx/app/edxapp/edx-platform/node_modules
+      - ${DEVSTACK_WORKSPACE}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
+      - edxapp_node_modules:/edx/app/edxapp/navoica-platform/node_modules
       - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   forum:
     volumes:

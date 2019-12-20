@@ -12,10 +12,10 @@ services:
       - ecommerce-sync:/edx/app/ecommerce/ecommerce:nocopy
   lms:
     volumes:
-      - edxapp-sync:/edx/app/edxapp/edx-platform:nocopy
+      - edxapp-sync:/edx/app/edxapp/navoica-platform:nocopy
   studio:
     volumes:
-      - edxapp-sync:/edx/app/edxapp/edx-platform:nocopy
+      - edxapp-sync:/edx/app/edxapp/navoica-platform:nocopy
   forum:
     volumes:
       - forum-sync:/edx/app/forum/cs_comments_service:nocopy

@@ -59,7 +59,7 @@ provision_ida() {
 
 if [ "$1" = "lms" -o -z "$1" ]; then
     notice Adding program support to LMS...
-    provision_ida lms "lms shell" edxapp edx-platform
+    provision_ida lms "lms shell" edxapp navoica-platform
 fi
 
 if [ "$1" = "discovery" -o -z "$1" ]; then
@@ -69,7 +69,7 @@ fi
 
 if [ "$1" = "cache" -o -z "$1" ]; then
     notice Caching programs inside the LMS...
-    docker_exec lms "lms cache_programs" edxapp edx-platform
+    docker_exec lms "lms cache_programs" edxapp navoica-platform
 fi
 
 reset_color
