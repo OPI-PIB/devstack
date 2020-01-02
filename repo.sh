@@ -75,7 +75,7 @@ _navoica_checkout ()
     if [ -z "$NAVOICA_RELEASE" ]; then
         branch="master"
     else
-        branch="${NAVOICA_RELEASE}"
+        branch="$(git -C "navoica-platform" tag -l "${NAVOICA_RELEASE}*" | tail -n1)"
     fi
     for repo in "${repos_to_checkout[@]}"   
     do
@@ -88,7 +88,7 @@ _navoica_checkout ()
             cd $name
             echo "Checking out branch $branch of $name"
 #            git pull
-            git checkout "$branch"
+            git checkout "$branch" || git checkout master
             cd ..
         fi
     done
@@ -152,7 +152,7 @@ _navoica_clone ()
             fi
             if [ -n "${NAVOICA_RELEASE}" ]; then
               cd $name
-                git checkout ${NAVOICA_RELEASE}
+                git checkout ${NAVOICA_RELEASE} || git checkout master
               cd ..
             fi
         fi
