@@ -208,6 +208,10 @@ services:
     image: edxops/forum:${OPENEDX_RELEASE:-latest}
     ports:
       - "44567:4567"
+      
+  gotenberg:
+    image: thecodingmachine/gotenberg:5
+    restart: always
 
   devpi:
     container_name: edx.devstack.devpi
