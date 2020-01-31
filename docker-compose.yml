@@ -238,7 +238,6 @@ services:
 volumes:
   discovery_assets:
   edxapp_lms_assets:
-  edxapp_lms_assets2:
   edxapp_studio_assets:
   elasticsearch_data:
   mongo_data:
