@@ -99,3 +99,4 @@ ENV/
 
 # Personal makefile extensions
 local.mk
+/reverseproxy-conf/conf.d/.htpasswd
