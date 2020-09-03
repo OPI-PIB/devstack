@@ -185,6 +185,15 @@ services:
       ENABLE_DJANGO_TOOLBAR: 1
       ELASTICSEARCH_URL: "http://edx.devstack.elasticsearch:9200"
 
+  sandbox:
+    container_name: navoica.devstack.sandbox
+    depends_on:
+      - lms
+      - studio
+    stdin_open: true
+    tty: true
+    image: navoica/navoica-sandbox:${NAVOICA_RELEASE}
+
   studio:
     command: bash -c 'source /edx/app/edxapp/edxapp_env && while true; do python /edx/app/edxapp/navoica-platform/manage.py cms runserver 0.0.0.0:18010 --settings devstack_docker; sleep 2; done'
     container_name: navoica.devstack.studio

@@ -173,6 +173,9 @@ update-db: | studio-update-db lms-update-db discovery-update-db ecommerce-update
 lms-shell: ## Run a shell on the LMS container
 	docker exec -it navoica.devstack.lms env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
 
+sandbox-shell: ## Run a shell on the LMS container
+	docker exec -it navoica.devstack.sandbox /bin/bash
+
 lms-watcher-shell: ## Run a shell on the LMS watcher container
 	docker exec -it edx.devstack.lms_watcher env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
 
