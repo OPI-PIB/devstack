@@ -142,6 +142,7 @@ services:
 # #      - "18130:18130"
 
   lms:
+    # command: tail -f /dev/null
     command: bash -c 'source /edx/app/edxapp/edxapp_env && while true; do python /edx/app/edxapp/navoica-platform/manage.py lms runserver 0.0.0.0:18000 --nostatic --settings devstack_docker; sleep 2; done'
     container_name: navoica.devstack.lms
     depends_on:
@@ -197,8 +198,8 @@ services:
     image: navoica/navoica-sandbox:${NAVOICA_RELEASE}
 
   studio:
-    command: bash -c 'source /edx/app/edxapp/edxapp_env && while true; do python /edx/app/edxapp/navoica-platform/manage.py cms runserver 0.0.0.0:18010 --nostatic --settings devstack_docker; sleep 2; done'
-    # command: tail -f /dev/null
+    # command: bash -c 'source /edx/app/edxapp/edxapp_env && while true; do python /edx/app/edxapp/navoica-platform/manage.py cms runserver 0.0.0.0:18010 --nostatic --settings devstack_docker; sleep 2; done'
+    command: tail -f /dev/null
     container_name: navoica.devstack.studio
     depends_on:
       # - devpi

@@ -67,6 +67,18 @@ dev.up: | check-memory ## Bring up all services with host volumes
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
+dev.lms-debug: | check-memory ## Bring up all services with host volumes
+	@echo "$(DEVSTACK_WORKSPACE)"
+	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml up -d
+	@# Comment out this next line if you want to save some time and don't care about catalog programs
+	./programs/provision.sh cache >/dev/null
+
+dev.studio-debug: | check-memory ## Bring up all services with host volumes
+	@echo "$(DEVSTACK_WORKSPACE)"
+	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml up -d
+	@# Comment out this next line if you want to save some time and don't care about catalog programs
+	./programs/provision.sh cache >/dev/null
+
 dev.up.watchers: | check-memory ## Bring up asset watcher containers
 	docker-compose -f docker-compose-watchers.yml up -d
 
@@ -103,7 +115,7 @@ stop.xqueue:
 
 down: ## Remove all service containers and networks
 	(test -d .docker-sync && docker-sync clean) || true ## Ignore failure here
-	docker-compose -f docker-compose.yml -f docker-compose-watchers.yml -f docker-compose-xqueue.yml -f docker-compose-analytics-pipeline.yml down
+	docker-compose -f docker-compose.yml -f docker-compose-lms-debug.yml -f docker-compose-studio-debug.yml -f docker-compose-watchers.yml -f docker-compose-xqueue.yml -f docker-compose-analytics-pipeline.yml down
 
 destroy: ## Remove all devstack-related containers, networks, and volumes
 	./destroy.sh
@@ -113,6 +125,9 @@ logs: ## View logs from containers running in detached mode
 
 %-logs: ## View the logs of the specified service container
 	docker-compose -f docker-compose.yml -f docker-compose-analytics-pipeline.yml logs -f --tail=500 $*
+
+%-dlogs: ## View the logs of the specified service container
+	docker-compose -f docker-compose-debug.yml -f docker-compose-analytics-pipeline.yml logs -f --tail=500 $*
 
 xqueue-logs: ## View logs from containers running in detached mode
 	docker-compose -f docker-compose-xqueue.yml logs -f xqueue
