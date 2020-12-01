@@ -63,19 +63,19 @@ dev.repo.reset: ## Attempts to reset the local repo checkouts to the master work
 
 dev.up: | check-memory ## Bring up all services with host volumes
 	@echo "$(DEVSTACK_WORKSPACE)"
-	docker-compose -f docker-compose.yml -f docker-compose-host.yml up -d
+	docker-compose -f docker-compose.yml -f docker-compose-host.yml -f docker-compose-themes.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
 dev.lms-debug: | check-memory ## Bring up all services with host volumes
 	@echo "$(DEVSTACK_WORKSPACE)"
-	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml up -d
+	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml -f docker-compose-themes.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
 dev.studio-debug: | check-memory ## Bring up all services with host volumes
 	@echo "$(DEVSTACK_WORKSPACE)"
-	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml up -d
+	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml -f docker-compose-themes.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
