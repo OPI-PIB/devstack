@@ -20,6 +20,7 @@ services:
       # - ./reverseproxy-conf/conf.d:/etc/nginx/conf.d
       - ./reverseproxy-conf/nginx:/etc/nginx/
       - edxapp_studio_assets:/edx/var/edxapp/staticfiles/
+      - edxapp_media_paths:/edx/var/edxapp/media/
     ports:
       - "18000:18000"
       - "18010:18010"
@@ -166,6 +167,7 @@ services:
 ##       - "18031:18031"
     volumes:
       - edxapp_studio_assets:/edx/var/edxapp/staticfiles/
+      - edxapp_media_paths:/edx/var/edxapp/media/
 
 #   edx_notes_api:
 #     command: bash -c 'source /edx/app/edx_notes_api/edx_notes_api_env && while true; do python /edx/app/edx_notes_api/edx_notes_api/manage.py runserver 0.0.0.0:18120 --settings notesserver.settings.devstack; sleep 2; done'
@@ -223,6 +225,7 @@ services:
 #      # - "18131:18131"
     volumes:
       - edxapp_studio_assets:/edx/var/edxapp/staticfiles/
+      - edxapp_media_paths:/edx/var/edxapp/media/
 
   forum:
     command: bash -c 'source /edx/app/forum/ruby_env && source /edx/app/forum/devstack_forum_env && cd /edx/app/forum/cs_comments_service && bundle install && while true; do ruby app.rb -o 0.0.0.0 ; sleep 2; done'
@@ -254,4 +257,5 @@ volumes:
   elasticsearch_data:
   mongo_data:
   mysql_data:
+  edxapp_media_paths:
   # devpi_data:
