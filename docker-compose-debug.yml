@@ -5,7 +5,7 @@
 # - Group third-party and edX services separately
 # - Alphabetize services in the groups
 # - Alphabetize individual configuration options for each service
-# - Every service's container name should be prefixed with "edx.devstack." to avoid conflicts with other containers
+# - Every service's container name should be prefixed with "edx.navoica-devstack." to avoid conflicts with other containers
 #   that might be running for the same service.
 
 version: "2.1"
@@ -14,21 +14,21 @@ services:
   # Third-party services
   nginx:
     image: nginx:latest
-    container_name: navoica.devstack.reverseproxy
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.reverseproxy
     volumes:
       # - ./reverseproxy-conf/nginx.conf:/etc/nginx/nginx.conf
       # - ./reverseproxy-conf/conf.d:/etc/nginx/conf.d
       - ./reverseproxy-conf/nginx:/etc/nginx/
       - edxapp_studio_assets:/edx/var/edxapp/staticfiles/
     ports:
-      - "18000:18000"
-      - "18010:18010"
+      - "19000:18000"
+      - "19010:18010"
     cap_add:
       - "NET_BIND_SERVICE"
     restart: always
 
 #   chrome:
-#     container_name: edx.devstack.chrome
+#     container_name: edx.navoica-devstack.chrome
 #     image: edxops/chrome:${OPENEDX_RELEASE:-latest}
 #     shm_size: 2g
 # #    ports:
@@ -38,7 +38,7 @@ services:
 #       - ../navoica-platform/common/test/data:/edx/app/edxapp/navoica-platform/common/test/data
 
   elasticsearch:
-    container_name: edx.devstack.elasticsearch
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.elasticsearch
     image: edxops/elasticsearch:devstack
     # TODO: What to do about these forwarded ports? They'll conflict with ports forwarded by the Vagrant VM.
     # ports:
@@ -49,7 +49,7 @@ services:
       - elasticsearch_data:/usr/share/elasticsearch/logs
 
 #   firefox:
-#     container_name: edx.devstack.firefox
+#     container_name: edx.navoica-devstack.firefox
 #     image: edxops/firefox:${OPENEDX_RELEASE:-latest}
 #     shm_size: 2g
 # #    ports:
@@ -59,7 +59,7 @@ services:
 #       - ../navoica-platform/common/test/data:/edx/app/edxapp/navoica-platform/common/test/data
 
   memcached:
-    container_name: edx.devstack.memcached
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.memcached
     image: memcached:1.4.24
     # ports:
     #   - "11211:11211"
@@ -69,7 +69,7 @@ services:
     # to conserve disk space, and disable the journal for a minor performance gain.
     # See https://docs.mongodb.com/v3.0/reference/program/mongod/#options for complete details.
     command: mongod --smallfiles --nojournal --storageEngine wiredTiger
-    container_name: edx.devstack.mongo
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.mongo
     image: mongo:3.2.16
     # ports:
     #  - "27017:27017"
@@ -78,7 +78,7 @@ services:
 
   mysql:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
-    container_name: edx.devstack.mysql
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.mysql
     environment:
       MYSQL_ROOT_PASSWORD: ""
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
@@ -91,7 +91,7 @@ services:
 #   # edX services
 #   credentials:
 #     command: bash -c 'source /edx/app/credentials/credentials_env && while true; do python /edx/app/credentials/credentials/manage.py runserver 0.0.0.0:18150; sleep 2; done'
-#     container_name: edx.devstack.credentials
+#     container_name: edx.navoica-devstack.credentials
 #     depends_on:
 #       - mysql
 #       - memcached
@@ -99,9 +99,9 @@ services:
 #     stdin_open: true
 #     tty: true
 #     environment:
-#       CACHE_LOCATION: edx.devstack.memcached:12211
-#       DB_HOST: edx.devstack.mysql
-#       SOCIAL_AUTH_EDX_OIDC_URL_ROOT: http://navoica.devstack.lms:18000/oauth2
+#       CACHE_LOCATION: edx.navoica-devstack.memcached:12211
+#       DB_HOST: edx.navoica-devstack.mysql
+#       SOCIAL_AUTH_EDX_OIDC_URL_ROOT: http://navoica.navoica-devstack.lms:18000/oauth2
 #       ENABLE_DJANGO_TOOLBAR: 1
 #     image: edxops/credentials:${OPENEDX_RELEASE:-latest}
 # #    ports:
@@ -109,7 +109,7 @@ services:
 
 #   discovery:
 #     command: bash -c 'source /edx/app/discovery/discovery_env && while true; do python /edx/app/discovery/discovery/manage.py runserver 0.0.0.0:18381; sleep 2; done'
-#     container_name: edx.devstack.discovery
+#     container_name: edx.navoica-devstack.discovery
 #     depends_on:
 #       - mysql
 #       - elasticsearch
@@ -118,7 +118,7 @@ services:
 #     stdin_open: true
 #     tty: true
 #     environment:
-#       TEST_ELASTICSEARCH_URL: "http://edx.devstack.elasticsearch:9200"
+#       TEST_ELASTICSEARCH_URL: "http://edx.navoica-devstack.elasticsearch:9200"
 #       ENABLE_DJANGO_TOOLBAR: 1
 #     image: edxops/discovery:${OPENEDX_RELEASE:-latest}
 # #    ports:
@@ -128,7 +128,7 @@ services:
 
 #   ecommerce:
 #     command: bash -c 'source /edx/app/ecommerce/ecommerce_env && while true; do python /edx/app/ecommerce/ecommerce/manage.py runserver 0.0.0.0:18130; sleep 2; done'
-#     container_name: edx.devstack.ecommerce
+#     container_name: edx.navoica-devstack.ecommerce
 #     depends_on:
 #       - mysql
 #       - memcached
@@ -144,7 +144,7 @@ services:
   lms:
     command: tail -f /dev/null
     # command: bash -c 'source /edx/app/edxapp/edxapp_env && while true; do python /edx/app/edxapp/navoica-platform/manage.py lms runserver 0.0.0.0:18000 --nostatic --settings devstack_docker; sleep 2; done'
-    container_name: navoica.devstack.lms
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.lms
     depends_on:
       # - devpi
       - mysql
@@ -154,10 +154,10 @@ services:
     stdin_open: true
     tty: true
     environment:
-      BOK_CHOY_HOSTNAME: navoica.devstack.lms
+      BOK_CHOY_HOSTNAME: edx.${COMPOSE_PROJECT_NAME:-devstack}.lms
       BOK_CHOY_LMS_PORT: 18003
       BOK_CHOY_CMS_PORT: 18031
-      EDXAPP_TEST_MONGO_HOST: edx.devstack.mongo
+      EDXAPP_TEST_MONGO_HOST: edx.${COMPOSE_PROJECT_NAME:-devstack}.mongo
       NO_PYTHON_UNINSTALL: 1
     image: navoica/navoica:${NAVOICA_RELEASE}
 #    ports:
@@ -170,7 +170,7 @@ services:
 
 #   edx_notes_api:
 #     command: bash -c 'source /edx/app/edx_notes_api/edx_notes_api_env && while true; do python /edx/app/edx_notes_api/edx_notes_api/manage.py runserver 0.0.0.0:18120 --settings notesserver.settings.devstack; sleep 2; done'
-#     container_name: edx.devstack.edx_notes_api
+#     container_name: edx.navoica-devstack.edx_notes_api
 #     depends_on:
 #       - devpi
 #       - elasticsearch
@@ -180,27 +180,27 @@ services:
 # #      - "18120:18120"
 #     environment:
 #       DB_ENGINE: "django.db.backends.mysql"
-#       DB_HOST: "edx.devstack.mysql"
+#       DB_HOST: "edx.navoica-devstack.mysql"
 #       DB_NAME: "notes"
 #       DB_PASSWORD: "password"
 #       DB_PORT: "3306"
 #       DB_USER: "notes001"
 #       ENABLE_DJANGO_TOOLBAR: 1
-#       ELASTICSEARCH_URL: "http://edx.devstack.elasticsearch:9200"
+#       ELASTICSEARCH_URL: "http://edx.navoica-devstack.elasticsearch:9200"
 
   sandbox:
-    container_name: navoica.devstack.sandbox
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.sandbox
     depends_on:
       - lms
       - studio
     stdin_open: true
     tty: true
-    image: navoica/navoica-sandbox:${NAVOICA_RELEASE}
+    image: navoica/navoica-sandbox:v1
 
   studio:
     # command: bash -c 'source /edx/app/edxapp/edxapp_env && while true; do python /edx/app/edxapp/navoica-platform/manage.py cms runserver 0.0.0.0:18010 --nostatic --settings devstack_docker; sleep 2; done'
     command: tail -f /dev/null
-    container_name: navoica.devstack.studio
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.studio
     depends_on:
       # - devpi
       - mysql
@@ -211,10 +211,10 @@ services:
     stdin_open: true
     tty: true
     environment:
-      BOK_CHOY_HOSTNAME: navoica.devstack.studio
+      BOK_CHOY_HOSTNAME: edx.${COMPOSE_PROJECT_NAME:-devstack}.studio
       BOK_CHOY_LMS_PORT: 18103
       BOK_CHOY_CMS_PORT: 18131
-      EDXAPP_TEST_MONGO_HOST: edx.devstack.mongo
+      EDXAPP_TEST_MONGO_HOST: edx.${COMPOSE_PROJECT_NAME:-devstack}.mongo
       NO_PYTHON_UNINSTALL: 1
     image: navoica/navoica:${NAVOICA_RELEASE}
 #    ports:
@@ -227,7 +227,7 @@ services:
 
   forum:
     command: bash -c 'source /edx/app/forum/ruby_env && source /edx/app/forum/devstack_forum_env && cd /edx/app/forum/cs_comments_service && bundle install && while true; do ruby app.rb -o 0.0.0.0 ; sleep 2; done'
-    container_name: edx.devstack.forum
+    container_name: edx.${COMPOSE_PROJECT_NAME:-devstack}.forum
     depends_on:
       - mongo
       - memcached
@@ -241,7 +241,7 @@ services:
     restart: always
 
 #   devpi:
-#     container_name: edx.devstack.devpi
+#     container_name: edx.navoica-devstack.devpi
 #     image: edxops/devpi:${OPENEDX_RELEASE:-latest}
 # #    ports:
 # #      - "3141:3141"

@@ -11,14 +11,14 @@ docker-compose up -d mysql
 
 # Ensure the MySQL server is online and usable
 echo "Waiting for MySQL"
-until docker exec -i edx.devstack.mysql mysql -uroot -se "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = 'root')" &> /dev/null
+until docker exec -i edx.${COMPOSE_PROJECT_NAME:-devstack}.mysql mysql -uroot -se "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = 'root')" &> /dev/null
 do
   printf "."
   sleep 1
 done
 
-docker exec -i edx.devstack.mysql mysql -uroot mysql < provision-xqueue.sql
+docker exec -i edx.${COMPOSE_PROJECT_NAME:-devstack}.mysql mysql -uroot mysql < provision-xqueue.sql
 # Run migrations
 docker-compose $DOCKER_COMPOSE_FILES exec xqueue bash -c 'source /edx/app/xqueue/xqueue_env && cd /edx/app/xqueue/xqueue && python manage.py migrate'
 # Add users that graders use to fetch data, there's one default user in Ansible which is part of our settings
-docker-compose $DOCKER_COMPOSE_FILES exec xqueue bash -c 'source /edx/app/xqueue/xqueue_env && cd /edx/app/xqueue/xqueue && python manage.py update_users' 
+docker-compose $DOCKER_COMPOSE_FILES exec xqueue bash -c 'source /edx/app/xqueue/xqueue_env && cd /edx/app/xqueue/xqueue && python manage.py update_users'

@@ -3,27 +3,27 @@ version: "2.1"
 services:
   lms_watcher:
     command: bash -c 'cd /edx/app/edxapp/navoica-platform && source ../edxapp_env && while true; do paver watch_assets --w=$$ASSET_WATCHER_TIMEOUT; sleep 2; done'
-    container_name: edx.devstack.lms_watcher
+    container_name: edx.navoica-devstack.lms_watcher
     environment:
-      BOK_CHOY_HOSTNAME: edx.devstack.lms_watcher
+      BOK_CHOY_HOSTNAME: edx.navoica-devstack.lms_watcher
       ASSET_WATCHER_TIMEOUT: 12
-    image: edxops/edxapp:${OPENEDX_RELEASE:-latest}
+    image: edxops/edxapp:${OPENEDX_RELEASE_NAVOICA:-latest}
     volumes:
-      - ${DEVSTACK_WORKSPACE}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
       - edxapp_lms_assets:/edx/var/edxapp/staticfiles/
-      - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/src:/edx/src:cached
 
   studio_watcher:
     command: bash -c 'cd /edx/app/edxapp/navoica-platform && source ../edxapp_env && while true; do paver watch_assets --w=$$ASSET_WATCHER_TIMEOUT; sleep 2; done'
-    container_name: navoica.devstack.studio_watcher
+    container_name: navoica.navoica-devstack.studio_watcher
     environment:
-      BOK_CHOY_HOSTNAME: navoica.devstack.studio_watcher
+      BOK_CHOY_HOSTNAME: navoica.navoica-devstack.studio_watcher
       ASSET_WATCHER_TIMEOUT: 12
-    image: edxops/edxapp:${OPENEDX_RELEASE:-latest}
+    image: edxops/edxapp:${OPENEDX_RELEASE_NAVOICA:-latest}
     volumes:
       - edxapp_studio_assets:/edx/var/edxapp/staticfiles/
-      - ${DEVSTACK_WORKSPACE}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
-      - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/src:/edx/src:cached
 
 volumes:
   edxapp_lms_assets:

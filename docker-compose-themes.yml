@@ -3,7 +3,7 @@ version: "2.1"
 services:
   lms:
       volumes:
-      - ${DEVSTACK_WORKSPACE}/edx-themes:/edx/app/edx-themes:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/edx-themes:/edx/app/edx-themes:cached
   studio:
       volumes:
-      - ${DEVSTACK_WORKSPACE}/edx-themes:/edx/app/edx-themes:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/edx-themes:/edx/app/edx-themes:cached

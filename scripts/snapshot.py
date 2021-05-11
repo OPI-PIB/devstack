@@ -16,7 +16,7 @@ from subprocess import check_call
 import yaml
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEVSTACK_WORKSPACE = os.path.dirname(REPO_ROOT)
+DEVSTACK_WORKSPACE_NAVOICA = os.path.dirname(REPO_ROOT)
 REPO_SCRIPT = os.path.join(REPO_ROOT, 'repo.sh')
 
 # Use this minimal container image to fetch volume content
@@ -37,7 +37,7 @@ def make_directories(output_dir):
 
 def archive_repos(output_dir):
     """
-    Create tarballs for each of the relevant repositories in DEVSTACK_WORKSPACE
+    Create tarballs for each of the relevant repositories in DEVSTACK_WORKSPACE_NAVOICA
     """
     with open('repo.sh', 'r') as f:
         script = f.read()
@@ -48,7 +48,7 @@ def archive_repos(output_dir):
     dirs.append('devstack')
     repositories_dir = os.path.join(output_dir, 'repositories')
     cwd = os.getcwd()
-    os.chdir(DEVSTACK_WORKSPACE)
+    os.chdir(DEVSTACK_WORKSPACE_NAVOICA)
     for directory in dirs:
         print('Archiving {}'.format(directory))
         output = os.path.join(repositories_dir, '{}.tar.gz'.format(directory))

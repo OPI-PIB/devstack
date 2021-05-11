@@ -7,13 +7,13 @@
 .DEFAULT_GOAL := help
 .PHONY: requirements
 
-DEVSTACK_WORKSPACE ?= $(shell pwd)/..
+DEVSTACK_WORKSPACE_NAVOICA ?= $(shell pwd)/..
 
 OS := $(shell uname)
 
 COMPOSE_PROJECT_NAME=navoica-devstack
 
-export DEVSTACK_WORKSPACE
+export DEVSTACK_WORKSPACE_NAVOICA
 export COMPOSE_PROJECT_NAME
 NAVOICA_SHORT_RELEASE = v1
 export NAVOICA_SHORT_RELEASE
@@ -36,7 +36,7 @@ upgrade: ## Upgrade requirements with pip-tools
 		requirements/pip-tools.txt \
 		requirements/base.txt \
 
-dev.checkout: ## Check out "openedx-release/$OPENEDX_RELEASE" in each repo if set, "master" otherwise
+dev.checkout: ## Check out "openedx-release/$OPENEDX_RELEASE_NAVOICA" in each repo if set, "master" otherwise
 	./repo.sh checkout
 
 
@@ -62,37 +62,37 @@ dev.repo.reset: ## Attempts to reset the local repo checkouts to the master work
 	./repo.sh reset
 
 dev.up: | check-memory ## Bring up all services with host volumes
-	@echo "$(DEVSTACK_WORKSPACE)"
+	@echo "$(DEVSTACK_WORKSPACE_NAVOICA)"
 	docker-compose -f docker-compose.yml -f docker-compose-host.yml -f docker-compose-themes.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
 dev.lms-debug: | check-memory ## Bring up all services with host volumes
-	@echo "$(DEVSTACK_WORKSPACE)"
+	@echo "$(DEVSTACK_WORKSPACE_NAVOICA)"
 	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml -f docker-compose-themes.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
 dev.studio-debug: | check-memory ## Bring up all services with host volumes
-	@echo "$(DEVSTACK_WORKSPACE)"
+	@echo "$(DEVSTACK_WORKSPACE_NAVOICA)"
 	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml -f docker-compose-themes.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
 dev.lms-debug: | check-memory ## Bring up all services with host volumes
-	@echo "$(DEVSTACK_WORKSPACE)"
+	@echo "$(DEVSTACK_WORKSPACE_NAVOICA)"
 	docker-compose -f docker-compose-lms-debug.yml -f docker-compose-host.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
 dev.studio-debug: | check-memory ## Bring up all services with host volumes
-	@echo "$(DEVSTACK_WORKSPACE)"
+	@echo "$(DEVSTACK_WORKSPACE_NAVOICA)"
 	docker-compose -f docker-compose-studio-debug.yml -f docker-compose-host.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
 
 dev.debug: | check-memory ## Bring up all services with host volumes
-	@echo "$(DEVSTACK_WORKSPACE)"
+	@echo "$(DEVSTACK_WORKSPACE_NAVOICA)"
 	docker-compose -f docker-compose-debug.yml -f docker-compose-host.yml up -d
 	@# Comment out this next line if you want to save some time and don't care about catalog programs
 	./programs/provision.sh cache >/dev/null
@@ -163,90 +163,90 @@ validate: ## Validate the devstack configuration
 	docker-compose config
 
 backup: ## Write all data volumes to the host.
-	docker run --rm --volumes-from edx.devstack.mysql -v $$(pwd)/.dev/backups:/backup debian:jessie tar zcvf /backup/mysql.tar.gz /var/lib/mysql
-	docker run --rm --volumes-from edx.devstack.mongo -v $$(pwd)/.dev/backups:/backup debian:jessie tar zcvf /backup/mongo.tar.gz /data/db
-	docker run --rm --volumes-from edx.devstack.elasticsearch -v $$(pwd)/.dev/backups:/backup debian:jessie tar zcvf /backup/elasticsearch.tar.gz /usr/share/elasticsearch/data
+	docker run --rm --volumes-from edx.${COMPOSE_PROJECT_NAME}.mysql -v $$(pwd)/.dev/backups:/backup debian:jessie tar zcvf /backup/mysql.tar.gz /var/lib/mysql
+	docker run --rm --volumes-from edx.${COMPOSE_PROJECT_NAME}.mongo -v $$(pwd)/.dev/backups:/backup debian:jessie tar zcvf /backup/mongo.tar.gz /data/db
+	docker run --rm --volumes-from edx.${COMPOSE_PROJECT_NAME}.elasticsearch -v $$(pwd)/.dev/backups:/backup debian:jessie tar zcvf /backup/elasticsearch.tar.gz /usr/share/elasticsearch/data
 
 restore:  ## Restore all data volumes from the host. WARNING: THIS WILL OVERWRITE ALL EXISTING DATA!
-	docker run --rm --volumes-from edx.devstack.mysql -v $$(pwd)/.dev/backups:/backup debian:jessie tar zxvf /backup/mysql.tar.gz
-	docker run --rm --volumes-from edx.devstack.mongo -v $$(pwd)/.dev/backups:/backup debian:jessie tar zxvf /backup/mongo.tar.gz
-	docker run --rm --volumes-from edx.devstack.elasticsearch -v $$(pwd)/.dev/backups:/backup debian:jessie tar zxvf /backup/elasticsearch.tar.gz
+	docker run --rm --volumes-from edx.${COMPOSE_PROJECT_NAME}.mysql -v $$(pwd)/.dev/backups:/backup debian:jessie tar zxvf /backup/mysql.tar.gz
+	docker run --rm --volumes-from edx.${COMPOSE_PROJECT_NAME}.mongo -v $$(pwd)/.dev/backups:/backup debian:jessie tar zxvf /backup/mongo.tar.gz
+	docker run --rm --volumes-from edx.${COMPOSE_PROJECT_NAME}.elasticsearch -v $$(pwd)/.dev/backups:/backup debian:jessie tar zxvf /backup/elasticsearch.tar.gz
 
 # TODO: Print out help for this target. Even better if we can iterate over the
 # services in docker-compose.yml, and print the actual service names.
 %-shell: ## Run a shell on the specified service container
-	docker exec -it edx.devstack.$* /bin/bash
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.$* /bin/bash
 
 credentials-shell:
-	docker exec -it edx.devstack.credentials env TERM=$(TERM) bash -c 'source /edx/app/credentials/credentials_env && cd /edx/app/credentials/credentials && /bin/bash'
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.credentials env TERM=$(TERM) bash -c 'source /edx/app/credentials/credentials_env && cd /edx/app/credentials/credentials && /bin/bash'
 
 discovery-shell: ## Run a shell on the discovery container
-	docker exec -it edx.devstack.discovery env TERM=$(TERM) /edx/app/discovery/devstack.sh open
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.discovery env TERM=$(TERM) /edx/app/discovery/devstack.sh open
 
 ecommerce-shell: ## Run a shell on the ecommerce container
-	docker exec -it edx.devstack.ecommerce env TERM=$(TERM) /edx/app/ecommerce/devstack.sh open
+	docker exec -it edx.dev${COMPOSE_PROJECT_NAME}stack.ecommerce env TERM=$(TERM) /edx/app/ecommerce/devstack.sh open
 
 studio-forum-shell: ## Run a shell on the studio forum container
-	docker exec -it navoica.devstack.studio-forum bash
+	docker exec -it navoica.${COMPOSE_PROJECT_NAME}.studio-forum bash
 
 e2e-shell: ## Start the end-to-end tests container with a shell
-	docker run -it --network=devstack_default -v ${DEVSTACK_WORKSPACE}/edx-e2e-tests:/edx-e2e-tests -v ${DEVSTACK_WORKSPACE}/navoica-platform:/edx-e2e-tests/lib/navoica-platform --env-file ${DEVSTACK_WORKSPACE}/edx-e2e-tests/devstack_env edxops/e2e env TERM=$(TERM) bash
+	docker run -it --network=devstack_default -v ${DEVSTACK_WORKSPACE_NAVOICA}/edx-e2e-tests:/edx-e2e-tests -v ${DEVSTACK_WORKSPACE_NAVOICA}/navoica-platform:/edx-e2e-tests/lib/navoica-platform --env-file ${DEVSTACK_WORKSPACE_NAVOICA}/edx-e2e-tests/devstack_env edxops/e2e env TERM=$(TERM) bash
 
 %-update-db: ## Run migrations for the specified service container
-	docker exec -t edx.devstack.$* bash -c 'source /edx/app/$*/$*_env && cd /edx/app/$*/$*/ && make migrate'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.$* bash -c 'source /edx/app/$*/$*_env && cd /edx/app/$*/$*/ && make migrate'
 
 studio-update-db: ## Run migrations for the Studio container
-	docker exec -t navoica.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_db'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_db'
 
 lms-update-db: ## Run migrations LMS container
-	docker exec -t navoica.devstack.lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_db'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_db'
 
 update-db: | studio-update-db lms-update-db discovery-update-db ecommerce-update-db credentials-update-db ## Run the migrations for all services
 
 lms-shell: ## Run a shell on the LMS container
-	docker exec -it navoica.devstack.lms env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.lms env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
 
 sandbox-shell: ## Run a shell on the LMS container
-	docker exec -it navoica.devstack.sandbox /bin/bash
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.sandbox /bin/bash
 
 lms-watcher-shell: ## Run a shell on the LMS watcher container
-	docker exec -it edx.devstack.lms_watcher env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.lms_watcher env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
 
 %-attach: ## Attach to the specified service container process to use the debugger & see logs.
-	docker attach edx.devstack.$*
+	docker attach edx.${COMPOSE_PROJECT_NAME}.$*
 
 lms-restart: ## Kill the LMS Django development server. The watcher process will restart it.
-	docker exec -t navoica.devstack.lms bash -c 'kill $$(ps aux | grep "manage.py lms" | egrep -v "while|grep" | awk "{print \$$2}")'
+	docker exec -t navoica.${COMPOSE_PROJECT_NAME}.lms bash -c 'kill $$(ps aux | grep "manage.py lms" | egrep -v "while|grep" | awk "{print \$$2}")'
 
 studio-shell: ## Run a shell on the Studio container
-	docker exec -it navoica.devstack.studio env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
+	docker exec -it navoica.${COMPOSE_PROJECT_NAME}.studio env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
 
 studio-watcher-shell: ## Run a shell on the studio watcher container
-	docker exec -it navoica.devstack.studio_watcher env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
+	docker exec -it navoica.${COMPOSE_PROJECT_NAME}.studio_watcher env TERM=$(TERM) /edx/app/edxapp/devstack.sh open
 
 studio-restart: ## Kill the LMS Django development server. The watcher process will restart it.
-	docker exec -t navoica.devstack.studio bash -c 'kill $$(ps aux | grep "manage.py cms" | egrep -v "while|grep" | awk "{print \$$2}")'
+	docker exec -t navoica.${COMPOSE_PROJECT_NAME}.studio bash -c 'kill $$(ps aux | grep "manage.py cms" | egrep -v "while|grep" | awk "{print \$$2}")'
 
 xqueue-shell: ## Run a shell on the XQueue container
-	docker exec -it edx.devstack.xqueue env TERM=$(TERM) /edx/app/xqueue/devstack.sh open
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.xqueue env TERM=$(TERM) /edx/app/xqueue/devstack.sh open
 
 xqueue-restart: ## Kill the XQueue development server. The watcher process will restart it.
-	docker exec -t edx.devstack.xqueue bash -c 'kill $$(ps aux | grep "manage.py runserver" | egrep -v "while|grep" | awk "{print \$$2}")'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.xqueue bash -c 'kill $$(ps aux | grep "manage.py runserver" | egrep -v "while|grep" | awk "{print \$$2}")'
 
 xqueue_consumer-shell: ## Run a shell on the XQueue consumer container
-	docker exec -it edx.devstack.xqueue_consumer env TERM=$(TERM) /edx/app/xqueue/devstack.sh open
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.xqueue_consumer env TERM=$(TERM) /edx/app/xqueue/devstack.sh open
 
 xqueue_consumer-restart: ## Kill the XQueue development server. The watcher process will restart it.
-	docker exec -t edx.devstack.xqueue_consumer bash -c 'kill $$(ps aux | grep "manage.py run_consumer" | egrep -v "while|grep" | awk "{print \$$2}")'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.xqueue_consumer bash -c 'kill $$(ps aux | grep "manage.py run_consumer" | egrep -v "while|grep" | awk "{print \$$2}")'
 
 %-static: ## Rebuild static assets for the specified service container
-	docker exec -t edx.devstack.$* bash -c 'source /edx/app/$*/$*_env && cd /edx/app/$*/$*/ && make static'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.$* bash -c 'source /edx/app/$*/$*_env && cd /edx/app/$*/$*/ && make static'
 
 lms-static: ## Rebuild static assets for the LMS container
-	docker exec -t navoica.devstack.lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_assets'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_assets'
 
 studio-static: ## Rebuild static assets for the Studio container
-	docker exec -t navoica.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_assets'
+	docker exec -t edx.${COMPOSE_PROJECT_NAME}.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/navoica-platform/ && paver update_assets'
 
 static: | credentials-static discovery-static ecommerce-static lms-static studio-static ## Rebuild static assets for all service containers
 
@@ -254,16 +254,16 @@ healthchecks: ## Run a curl against all services' healthcheck endpoints to make 
 	./healthchecks.sh
 
 e2e-tests: ## Run the end-to-end tests against the service containers
-	docker run -t --network=devstack_default -v ${DEVSTACK_WORKSPACE}/edx-e2e-tests:/edx-e2e-tests -v ${DEVSTACK_WORKSPACE}/navoica-platform:/edx-e2e-tests/lib/navoica-platform --env-file ${DEVSTACK_WORKSPACE}/edx-e2e-tests/devstack_env edxops/e2e env TERM=$(TERM)  bash -c 'paver e2e_test --exclude="whitelabel\|enterprise"'
+	docker run -t --network=devstack_default -v ${DEVSTACK_WORKSPACE_NAVOICA}/edx-e2e-tests:/edx-e2e-tests -v ${DEVSTACK_WORKSPACE_NAVOICA}/navoica-platform:/edx-e2e-tests/lib/navoica-platform --env-file ${DEVSTACK_WORKSPACE_NAVOICA}/edx-e2e-tests/devstack_env edxops/e2e env TERM=$(TERM)  bash -c 'paver e2e_test --exclude="whitelabel\|enterprise"'
 
 validate-lms-volume: ## Validate that changes to the local workspace are reflected in the LMS container
-	touch $(DEVSTACK_WORKSPACE)/navoica-platform/testfile
-	docker exec navoica.devstack.lms ls /edx/app/edxapp/navoica-platform/testfile
-	rm $(DEVSTACK_WORKSPACE)/navoica-platform/testfile
+	touch $(DEVSTACK_WORKSPACE_NAVOICA)/navoica-platform/testfile
+	docker exec navoica.${COMPOSE_PROJECT_NAME}.lms ls /edx/app/edxapp/navoica-platform/testfile
+	rm $(DEVSTACK_WORKSPACE_NAVOICA)/navoica-platform/testfile
 
 vnc-passwords: ## Get the VNC passwords for the Chrome and Firefox Selenium containers
-	@docker logs edx.devstack.chrome 2>&1 | grep "VNC password" | tail -1
-	@docker logs edx.devstack.firefox 2>&1 | grep "VNC password" | tail -1
+	@docker logs edx.${COMPOSE_PROJECT_NAME}.chrome 2>&1 | grep "VNC password" | tail -1
+	@docker logs edx.${COMPOSE_PROJECT_NAME}.firefox 2>&1 | grep "VNC password" | tail -1
 
 devpi-password: ## Get the root devpi password for the devpi container
 	docker-compose exec devpi bash -c "cat /data/server/.serverpassword"
@@ -285,7 +285,7 @@ dev.provision.analytics_pipeline.run:
 	DOCKER_COMPOSE_FILES="-f docker-compose.yml -f docker-compose-host.yml -f docker-compose-analytics-pipeline.yml" ./provision-analytics-pipeline.sh
 
 analytics-pipeline-shell: ## Run a shell on the analytics pipeline container
-	docker exec -it edx.devstack.analytics_pipeline env TERM=$(TERM) /edx/app/analytics_pipeline/devstack.sh open
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.analytics_pipeline env TERM=$(TERM) /edx/app/analytics_pipeline/devstack.sh open
 
 dev.up.analytics_pipeline: | check-memory ## Bring up analytics pipeline services
 	docker-compose -f docker-compose.yml -f docker-compose-analytics-pipeline.yml -f docker-compose-host.yml up -d analyticspipeline
@@ -294,14 +294,14 @@ pull.analytics_pipeline: ## Update analytics pipeline docker images
 	docker-compose -f docker-compose.yml -f docker-compose-analytics-pipeline.yml pull --parallel
 
 analytics-pipeline-devstack-test: ## Run analytics pipeline tests in travis build
-	docker exec -u hadoop -i edx.devstack.analytics_pipeline bash -c 'sudo chown -R hadoop:hadoop /edx/app/analytics_pipeline && source /edx/app/hadoop/.bashrc && make develop-local && make docker-test-acceptance-local ONLY_TESTS=edx.analytics.tasks.tests.acceptance.test_internal_reporting_database && make docker-test-acceptance-local ONLY_TESTS=edx.analytics.tasks.tests.acceptance.test_user_activity'
+	docker exec -u hadoop -i edx.${COMPOSE_PROJECT_NAME}.analytics_pipeline bash -c 'sudo chown -R hadoop:hadoop /edx/app/analytics_pipeline && source /edx/app/hadoop/.bashrc && make develop-local && make docker-test-acceptance-local ONLY_TESTS=edx.analytics.tasks.tests.acceptance.test_internal_reporting_database && make docker-test-acceptance-local ONLY_TESTS=edx.analytics.tasks.tests.acceptance.test_user_activity'
 
 stop.analytics_pipeline: ## Stop analytics pipeline services
 	docker-compose -f docker-compose.yml -f docker-compose-analytics-pipeline.yml stop
 	docker-compose up -d mysql      ## restart mysql as other containers need it
 
 hadoop-application-logs-%: ## View hadoop logs by application Id
-	docker exec -it edx.devstack.analytics_pipeline.nodemanager yarn logs -applicationId $*
+	docker exec -it edx.${COMPOSE_PROJECT_NAME}.analytics_pipeline.nodemanager yarn logs -applicationId $*
 
 # Provisions studio, ecommerce, and marketing with course(s) in test-course.json
 # Modify test-course.json before running this make target to generate a custom course

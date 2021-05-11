@@ -18,10 +18,10 @@ services:
   #     - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   lms:
     volumes:
-      - ${DEVSTACK_WORKSPACE}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
       - edxapp_node_modules:/edx/app/edxapp/navoica-platform/node_modules
-      - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
-      - ${DEVSTACK_WORKSPACE}/edx-themes:/edx/app/edx-themes
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/src:/edx/src:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/edx-themes:/edx/app/edx-themes
 
   # edx_notes_api:
   #   volumes:
@@ -29,13 +29,13 @@ services:
   #     - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
   studio:
     volumes:
-      - ${DEVSTACK_WORKSPACE}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/navoica-platform:/edx/app/edxapp/navoica-platform:cached
       - edxapp_node_modules:/edx/app/edxapp/navoica-platform/node_modules
-      - ${DEVSTACK_WORKSPACE}/src:/edx/src:cached
-      - ${DEVSTACK_WORKSPACE}/edx-themes:/edx/app/edx-themes
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/src:/edx/src:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/edx-themes:/edx/app/edx-themes
   forum:
     volumes:
-      - ${DEVSTACK_WORKSPACE}/cs_comments_service:/edx/app/forum/cs_comments_service:cached
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/cs_comments_service:/edx/app/forum/cs_comments_service:cached
 
 volumes:
   # credentials_node_modules:

@@ -17,5 +17,5 @@ then
 fi
 
 echo "Loading the $1 database..."
-docker exec -i edx.devstack.mysql mysql -uroot $1 < $1.sql
+docker exec -i edx.${COMPOSE_PROJECT_NAME:-devstack}.mysql mysql -uroot $1 < $1.sql
 echo "Finished loading the $1 database!"

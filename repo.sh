@@ -7,13 +7,13 @@ set -o pipefail
 # data volumes into their corresponding Docker containers to facilitate development.
 # Repos are cloned to/removed from the directory above the one housing this file.
 
-if [ -z "$DEVSTACK_WORKSPACE" ]; then
+if [ -z "$DEVSTACK_WORKSPACE_NAVOICA" ]; then
     echo "need to set workspace dir"
     exit 1
-elif [ -d "$DEVSTACK_WORKSPACE" ]; then
-    cd $DEVSTACK_WORKSPACE
+elif [ -d "$DEVSTACK_WORKSPACE_NAVOICA" ]; then
+    cd $DEVSTACK_WORKSPACE_NAVOICA
 else
-    echo "Workspace directory $DEVSTACK_WORKSPACE doesn't exist"
+    echo "Workspace directory $DEVSTACK_WORKSPACE_NAVOICA doesn't exist"
     exit 1
 fi
 
@@ -44,10 +44,10 @@ _checkout ()
 {
     repos_to_checkout=("$@")
 
-    if [ -z "$OPENEDX_RELEASE" ]; then
+    if [ -z "$OPENEDX_RELEASE_NAVOICA" ]; then
         branch="master"
     else
-        branch="open-release/${OPENEDX_RELEASE}"
+        branch="open-release/${OPENEDX_RELEASE_NAVOICA}"
     fi
     for repo in "${repos_to_checkout[@]}"
     do
@@ -77,7 +77,7 @@ _navoica_checkout ()
     else
         branch="$(git -C "navoica-platform" tag -l "${NAVOICA_RELEASE}*" | tail -n1)"
     fi
-    for repo in "${repos_to_checkout[@]}"   
+    for repo in "${repos_to_checkout[@]}"
     do
         # Use Bash's regex match operator to capture the name of the repo.
         # Results of the match are saved to an array called $BASH_REMATCH.
@@ -120,9 +120,9 @@ _clone ()
             else
                 git clone $repo
             fi
-            if [ -n "${OPENEDX_RELEASE}" ]; then
+            if [ -n "${OPENEDX_RELEASE_NAVOICA}" ]; then
               cd $name
-                git checkout open-release/${OPENEDX_RELEASE}
+                git checkout open-release/${OPENEDX_RELEASE_NAVOICA}
               cd ..
             fi
         fi

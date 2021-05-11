@@ -57,7 +57,7 @@ use the following options:
 
 - Environment variables:
 
-  - ``DEVSTACK_WORKSPACE=/LOCAL/PARENT/PATH/TO/workspace`` (i.e.: Path to where your local repositories are cloned)
+  - ``DEVSTACK_WORKSPACE_NAVOICA=/LOCAL/PARENT/PATH/TO/workspace`` (i.e.: Path to where your local repositories are cloned)
 
 - Python interpreter path:
 

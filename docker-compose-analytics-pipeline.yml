@@ -2,8 +2,8 @@ version: "2.1"
 
 services:
   namenode:
-    image: edxops/analytics_pipeline_hadoop_namenode:${OPENEDX_RELEASE:-latest}
-    container_name: edx.devstack.analytics_pipeline.namenode
+    image: edxops/analytics_pipeline_hadoop_namenode:${OPENEDX_RELEASE_NAVOICA:-latest}
+    container_name: edx.navoica-devstack.analytics_pipeline.namenode
     hostname: namenode
     environment:
       - CLUSTER_NAME=devstack
@@ -14,8 +14,8 @@ services:
       - namenode_data:/hadoop/dfs/name
 
   datanode:
-    image: edxops/analytics_pipeline_hadoop_datanode:${OPENEDX_RELEASE:-latest}
-    container_name: edx.devstack.analytics_pipeline.datanode
+    image: edxops/analytics_pipeline_hadoop_datanode:${OPENEDX_RELEASE_NAVOICA:-latest}
+    container_name: edx.navoica-devstack.analytics_pipeline.datanode
     hostname: datanode
     environment:
       CORE_CONF_fs_defaultFS: "hdfs://namenode:8020"
@@ -28,8 +28,8 @@ services:
       - datanode_data:/hadoop/dfs/data
 
   resourcemanager:
-    image: edxops/analytics_pipeline_hadoop_resourcemanager:${OPENEDX_RELEASE:-latest}
-    container_name: edx.devstack.analytics_pipeline.resourcemanager
+    image: edxops/analytics_pipeline_hadoop_resourcemanager:${OPENEDX_RELEASE_NAVOICA:-latest}
+    container_name: edx.navoica-devstack.analytics_pipeline.resourcemanager
     hostname: resourcemanager
     environment:
       CORE_CONF_fs_defaultFS: "hdfs://namenode:8020"
@@ -45,8 +45,8 @@ services:
     command: ["/run.sh"]
 
   nodemanager:
-    image: edxops/analytics_pipeline_hadoop_nodemanager:${OPENEDX_RELEASE:-latest}
-    container_name: edx.devstack.analytics_pipeline.nodemanager
+    image: edxops/analytics_pipeline_hadoop_nodemanager:${OPENEDX_RELEASE_NAVOICA:-latest}
+    container_name: edx.navoica-devstack.analytics_pipeline.nodemanager
     hostname: nodemanager
     environment:
       CORE_CONF_fs_defaultFS: "hdfs://namenode:8020"
@@ -66,8 +66,8 @@ services:
     command: ["/run.sh"]
 
   sparkmaster:
-    image: edxops/analytics_pipeline_spark_master:${OPENEDX_RELEASE:-latest}
-    container_name: edx.devstack.analytics_pipeline.sparkmaster
+    image: edxops/analytics_pipeline_spark_master:${OPENEDX_RELEASE_NAVOICA:-latest}
+    container_name: edx.navoica-devstack.analytics_pipeline.sparkmaster
     hostname: sparkmaster
     ports:
       - 127.0.0.1:8080:8080
@@ -76,8 +76,8 @@ services:
       - 127.0.0.1:18080:18080     # spark history server
 
   sparkworker:
-    image: edxops/analytics_pipeline_spark_worker:${OPENEDX_RELEASE:-latest}
-    container_name: edx.devstack.analytics_pipeline.sparkworker
+    image: edxops/analytics_pipeline_spark_worker:${OPENEDX_RELEASE_NAVOICA:-latest}
+    container_name: edx.navoica-devstack.analytics_pipeline.sparkworker
     hostname: sparkworker
     depends_on:
       - sparkmaster
@@ -88,16 +88,16 @@ services:
 
   vertica:
     image: sumitchawla/vertica:latest
-    container_name: edx.devstack.analytics_pipeline.vertica
+    container_name: edx.navoica-devstack.analytics_pipeline.vertica
     volumes:
       - vertica_data:/home/dbadmin/docker
 
   analyticspipeline:
-    image: edxops/analytics_pipeline:${OPENEDX_RELEASE:-latest}
-    container_name: edx.devstack.analytics_pipeline
+    image: edxops/analytics_pipeline:${OPENEDX_RELEASE_NAVOICA:-latest}
+    container_name: edx.navoica-devstack.analytics_pipeline
     hostname: analyticspipeline
     volumes:
-      - ${DEVSTACK_WORKSPACE}/edx-analytics-pipeline:/edx/app/analytics_pipeline/analytics_pipeline
+      - ${DEVSTACK_WORKSPACE_NAVOICA}/edx-analytics-pipeline:/edx/app/analytics_pipeline/analytics_pipeline
     command: ["/etc/bootstrap.sh", "-d"]
     depends_on:
       - mysql

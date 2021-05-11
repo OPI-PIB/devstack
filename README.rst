@@ -92,7 +92,7 @@ a minimum of 2 CPUs and 6GB of memory works well.
 
    You may customize where the local repositories are found by setting the
    DEVSTACK\_WORKSPACE environment variable.
-   
+
    Be sure to share the cloned directories in the Docker -> Preferences... ->
    File Sharing box.
 
@@ -241,11 +241,11 @@ analyticstack ( e.g. lms, studio etc ) consider setting higher memory.
    .. code:: sh
 
      make analytics-pipeline-shell
-    
+
    - To see logs from containers running in detached mode, you can either use
      "Kitematic" (available from the "Docker for Mac" menu), or by running the
      following command:
-    
+
       .. code:: sh
 
         make logs
@@ -256,9 +256,9 @@ analyticstack ( e.g. lms, studio etc ) consider setting higher memory.
       .. code:: sh
 
         make namenode-logs
-    
+
    - To reset your environment and start provisioning from scratch, you can run:
-    
+
       .. code:: sh
 
         make destroy
@@ -266,9 +266,9 @@ analyticstack ( e.g. lms, studio etc ) consider setting higher memory.
      **NOTE:** Be warned! This will remove all the containers and volumes
      initiated by this repository and all the data ( in these docker containers )
      will be lost.
-    
+
    - For information on all the available ``make`` commands, you can run:
-    
+
       .. code:: sh
 
         make help
@@ -391,17 +391,17 @@ E-Commerce Service, you would modify ``ECOMMERCE_VERSION`` in
 How do I run the images for a named Open edX release?
 -----------------------------------------------------
 
-1. Set the ``OPENEDX_RELEASE`` environment variable to the appropriate image
+1. Set the ``OPENEDX_RELEASE_NAVOICA`` environment variable to the appropriate image
    tag; "hawthorn.master", "zebrawood.rc1", etc.  Note that unlike a server
-   install, ``OPENEDX_RELEASE`` should not have the "open-release/" prefix.
+   install, ``OPENEDX_RELEASE_NAVOICA`` should not have the "open-release/" prefix.
 2. Use ``make dev.checkout`` to check out the correct branch in the local
-   checkout of each service repository once you've set the ``OPENEDX_RELEASE``
+   checkout of each service repository once you've set the ``OPENEDX_RELEASE_NAVOICA``
    environment variable above.
 3. ``make pull`` to get the correct images.
 
 All ``make`` target and ``docker-compose`` calls should now use the correct
-images until you change or unset ``OPENEDX_RELEASE`` again.  To work on the
-master branches and ``latest`` images, unset ``OPENEDX_RELEASE`` or set it to
+images until you change or unset ``OPENEDX_RELEASE_NAVOICA`` again.  To work on the
+master branches and ``latest`` images, unset ``OPENEDX_RELEASE_NAVOICA`` or set it to
 an empty string.
 
 How do I create database dumps?
@@ -630,7 +630,7 @@ or a manual Docker command to bring down the container:
 
 .. code:: sh
 
-   docker kill $(docker ps -a -q --filter="name=edx.devstack.<container name>")
+   docker kill $(docker ps -a -q --filter="name=edx.navoica-devstack.<container name>")
 
 Running LMS and Studio Tests
 ----------------------------
@@ -674,7 +674,7 @@ startup, and can be found by running ``make vnc-passwords``.
 
 Most tests are run in Firefox by default.  To use Chrome for tests that normally
 use Firefox instead, prefix the test command with
-``SELENIUM_BROWSER=chrome SELENIUM_HOST=edx.devstack.chrome``.
+``SELENIUM_BROWSER=chrome SELENIUM_HOST=edx.navoica-devstack.chrome``.
 
 Running End-to-End Tests
 ------------------------
